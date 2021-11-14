@@ -63,6 +63,27 @@ app.get('/todos/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
+// Edit page
+app.get('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  Todo.findById(id)
+    .lean()
+    .then(todo => res.render('edit', { todo }))
+    .catch(error => console.log(error))
+})
+
+app.post('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  const name = req.body.name
+  Todo.findById(id)
+    .then(todo => { // If found the data by id, do the belows
+      todo.name = name // Update the name in the database
+      todo.save() // Save it
+    })
+    .then(() => res.redirect(`/todos/${id}`))
+    .catch(error => console.log(error))
+})
+
 
 // Start server and listen to request
 app.listen(port, () => {
