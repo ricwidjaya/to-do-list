@@ -44,6 +44,7 @@ app.get('/todos/new', (req, res) => {
   res.render('new')
 })
 
+// Create new todo
 app.post('/todos', (req, res) => {
   const name = req.body.name
   Todo.create({ name }) // Create data from the POST request
@@ -51,6 +52,17 @@ app.post('/todos', (req, res) => {
     .catch(error => console.log(error))
 
 })
+
+// View specific todo
+app.get('/todos/:id', (req, res) => {
+  // const id = req.params.id
+  const id = req.params.id
+  Todo.findById(id) // This equals to (SELECT * FROM todos WHERE id = id)
+    .lean()
+    .then(todo => res.render('detail', { todo }))
+    .catch(error => console.log(error))
+})
+
 
 // Start server and listen to request
 app.listen(port, () => {
