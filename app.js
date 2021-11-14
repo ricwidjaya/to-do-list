@@ -1,10 +1,26 @@
-// Express
+// Import modules
 const express = require('express')
+const exphbs = require('express-handlebars')
+const mongoose = require('mongoose')
+
+// Initialize server
 const app = express()
 const port = 3000
 
+// Connect to database
+mongoose.connect('mongodb://localhost/todo-list')
+// Listen to database connection
+const db = mongoose.connection
+
+db.on('error', () => { // Listen on errors
+  console.log('mongodb error')
+})
+
+db.once('open', () => { // Listen on open once
+  console.log('mongodb connected')
+})
+
 // Set template engine to handlebars
-const exphbs = require('express-handlebars')
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' })) // express-handlebars 6.0.1 uses .engine() to configure the template engine
 app.set('view engine', 'handlebars')
 
