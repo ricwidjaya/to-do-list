@@ -33,12 +33,24 @@ app.use(express.urlencoded({ extended: true }))
 
 // Landing page
 app.get('/', (req, res) => {
-  Todo.find() // Get all data from the Todo data model
+  Todo.find() // Tell Todo data model to find data in MongoDB through mongoose. This equals to (SELECT * FROM "todos") in SQL
     .lean() // Transfer the mongoose object into clean Javascript array
     .then(todos => res.render('index', { todos })) // Then, pass the data to index partial template
     .catch(error => console.log(error)) // Print the error message
 })
 
+//  New To-do page
+app.get('/todos/new', (req, res) => {
+  res.render('new')
+})
+
+app.post('/todos', (req, res) => {
+  const name = req.body.name
+  Todo.create({ name }) // Create data from the POST request
+    .then(res.redirect('/')) // Then, redirect back to landing page
+    .catch(error => console.log(error))
+
+})
 
 // Start server and listen to request
 app.listen(port, () => {
