@@ -2,6 +2,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
+const Todo = require('./models/todo') // Load Todo model
 
 // Initialize server
 const app = express()
@@ -32,7 +33,10 @@ app.use(express.urlencoded({ extended: true }))
 
 // Landing page
 app.get('/', (req, res) => {
-  res.render('index')
+  Todo.find() // Get all data from the Todo data model
+    .lean() // Transfer the mongoose object into clean Javascript array
+    .then(todos => res.render('index', { todos })) // Then, pass the data to index partial template
+    .catch(error => console.log(error)) // Print the error message
 })
 
 
