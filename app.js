@@ -3,7 +3,7 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const methodOverride = require('method-override') // Override HTTP verbs to match RESTful API
-const Todo = require('./models/todo') // Load Todo model
+const routes = require('./routes')
 
 // Initialize server
 const app = express()
@@ -35,70 +35,9 @@ app.use(express.urlencoded({ extended: true }))
 // Override HTTP methods
 app.use(methodOverride('_method'))
 
-// Landing page
-app.get('/', (req, res) => {
-  Todo.find() // Tell Todo data model to find data in MongoDB through mongoose. This equals to (SELECT * FROM "todos") in SQL
-    .lean() // Transfer the mongoose object into clean Javascript array
-    .sort({ _id: 'asc' })
-    .then(todos => res.render('index', { todos })) // Then, pass the data to index partial template
-    .catch(error => console.log(error)) // Print the error message
-})
+// Main Router
+app.use(routes)
 
-//  New To-do page
-app.get('/todos/new', (req, res) => {
-  res.render('new')
-})
-
-// Create new todo
-app.post('/todos', (req, res) => {
-  const name = req.body.name
-  Todo.create({ name }) // Create data from the POST request
-    .then(res.redirect('/')) // Then, redirect back to landing page
-    .catch(error => console.log(error))
-
-})
-
-// View specific todo
-app.get('/todos/:id', (req, res) => {
-  // const id = req.params.id
-  const id = req.params.id
-  Todo.findById(id) // This equals to (SELECT * FROM todos WHERE id = id)
-    .lean()
-    .then(todo => res.render('detail', { todo }))
-    .catch(error => console.log(error))
-})
-
-// Land edit todo page
-app.get('/todos/:id/edit', (req, res) => {
-  const id = req.params.id
-  Todo.findById(id)
-    .lean()
-    .then(todo => res.render('edit', { todo }))
-    .catch(error => console.log(error))
-})
-
-// Update todo
-app.put('/todos/:id', (req, res) => {
-  const id = req.params.id
-  const { name, isDone } = req.body
-  Todo.findById(id)
-    .then(todo => { // If found the data by id, do the belows
-      todo.name = name // Update the name in the database
-      todo.isDone = isDone === 'on'
-      todo.save() // Save it
-    })
-    .then(() => res.redirect(`/todos/${id}`))
-    .catch(error => console.log(error))
-})
-
-// Delete todo
-app.delete('/todos/:id', (req, res) => {
-  const id = req.params.id
-  Todo.findById(id)
-    .then(todo => todo.remove())
-    .then(res.redirect('/'))
-    .catch(error => console.log(error))
-})
 
 // Start server and listen to request
 app.listen(port, () => {
