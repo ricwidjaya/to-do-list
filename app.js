@@ -2,6 +2,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
+const methodOverride = require('method-override') // Override HTTP verbs to match RESTful API
 const Todo = require('./models/todo') // Load Todo model
 
 // Initialize server
@@ -30,6 +31,9 @@ app.use(express.static('public'))
 
 // Set body-parser
 app.use(express.urlencoded({ extended: true }))
+
+// Override HTTP methods
+app.use(methodOverride('_method'))
 
 // Landing page
 app.get('/', (req, res) => {
@@ -64,7 +68,7 @@ app.get('/todos/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
-// Edit todo page
+// Land edit todo page
 app.get('/todos/:id/edit', (req, res) => {
   const id = req.params.id
   Todo.findById(id)
@@ -74,7 +78,7 @@ app.get('/todos/:id/edit', (req, res) => {
 })
 
 // Update todo
-app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id
   const { name, isDone } = req.body
   Todo.findById(id)
@@ -88,7 +92,7 @@ app.post('/todos/:id/edit', (req, res) => {
 })
 
 // Delete todo
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   Todo.findById(id)
     .then(todo => todo.remove())
