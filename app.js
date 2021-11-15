@@ -63,7 +63,7 @@ app.get('/todos/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
-// Edit page
+// Edit todo page
 app.get('/todos/:id/edit', (req, res) => {
   const id = req.params.id
   Todo.findById(id)
@@ -84,6 +84,14 @@ app.post('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
+// Delete todo
+app.post('/todos/:id/delete', (req, res) => {
+  const id = req.params.id
+  Todo.findById(id)
+    .then(todo => todo.remove())
+    .then(res.redirect('/'))
+    .catch(error => console.log(error))
+})
 
 // Start server and listen to request
 app.listen(port, () => {
