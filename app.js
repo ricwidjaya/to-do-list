@@ -35,6 +35,7 @@ app.use(express.urlencoded({ extended: true }))
 app.get('/', (req, res) => {
   Todo.find() // Tell Todo data model to find data in MongoDB through mongoose. This equals to (SELECT * FROM "todos") in SQL
     .lean() // Transfer the mongoose object into clean Javascript array
+    .sort({ _id: 'asc' })
     .then(todos => res.render('index', { todos })) // Then, pass the data to index partial template
     .catch(error => console.log(error)) // Print the error message
 })
@@ -75,7 +76,7 @@ app.get('/todos/:id/edit', (req, res) => {
 // Update todo
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id
-  const { name , isDone } = req.body
+  const { name, isDone } = req.body
   Todo.findById(id)
     .then(todo => { // If found the data by id, do the belows
       todo.name = name // Update the name in the database
