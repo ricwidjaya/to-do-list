@@ -7,7 +7,7 @@ require('./config/mongoose')
 
 // Initialize server
 const app = express()
-const port = 3000
+const PORT = process.env.PORT || 3000
 
 // Set template engine to handlebars
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' })) // express-handlebars 6.0.1 uses .engine() to configure the template engine
@@ -27,6 +27,6 @@ app.use(routes)
 
 
 // Start server and listen to request
-app.listen(port, () => {
-  console.log(`Server running on port:${port}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port:${PORT}`)
 })
