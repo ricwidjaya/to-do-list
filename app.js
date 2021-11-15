@@ -72,12 +72,14 @@ app.get('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
+// Update todo
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id
-  const name = req.body.name
+  const { name , isDone } = req.body
   Todo.findById(id)
     .then(todo => { // If found the data by id, do the belows
       todo.name = name // Update the name in the database
+      todo.isDone = isDone === 'on'
       todo.save() // Save it
     })
     .then(() => res.redirect(`/todos/${id}`))
