@@ -1,5 +1,6 @@
 // Import modules
 const express = require('express')
+const session = require('express-session')
 const exphbs = require('express-handlebars')
 const methodOverride = require('method-override') // Override HTTP verbs to match RESTful API
 const routes = require('./routes')
@@ -15,6 +16,13 @@ app.set('view engine', 'handlebars')
 
 // Serve static files
 app.use(express.static('public'))
+
+// Set cookie session
+app.use(session({
+  secret: 'yourCookieYourSecret',
+  resave: false,
+  saveUninitialized: true
+}))
 
 // Set body-parser
 app.use(express.urlencoded({ extended: true }))
