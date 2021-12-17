@@ -5,7 +5,6 @@ const Todo = require("../../models/todo")
 const User = require("../../models/user")
 const passport = require("passport")
 
-
 // Home Page (Logged in)
 router.get("/", (req, res) => {
   Todo.find() // Tell Todo data model to find data in MongoDB through mongoose. This equals to (SELECT * FROM "todos") in SQL
@@ -28,6 +27,12 @@ router.post(
     failureRedirect: "/login"
   })
 )
+
+// Log out route
+router.get("/logout", (req, res) => {
+  req.logout()
+  res.redirect("/login")
+})
 
 // Register Page
 router.get("/register", (req, res) => {
