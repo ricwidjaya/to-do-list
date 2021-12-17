@@ -3,6 +3,8 @@ const express = require("express")
 const router = express.Router()
 const Todo = require("../../models/todo")
 const User = require("../../models/user")
+const passport = require("passport")
+
 
 // Home Page (Logged in)
 router.get("/", (req, res) => {
@@ -18,9 +20,14 @@ router.get("/login", (req, res) => {
   res.render("login")
 })
 
-router.post("/login", (req, res) => {
-  console.log("POST /login")
-})
+// Use passport middleware instead of express one
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login"
+  })
+)
 
 // Register Page
 router.get("/register", (req, res) => {
