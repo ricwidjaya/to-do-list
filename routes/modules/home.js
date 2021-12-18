@@ -5,7 +5,8 @@ const Todo = require("../../models/todo")
 
 // Home Page (Logged in)
 router.get("/", (req, res) => {
-  Todo.find() // Tell Todo data model to find data in MongoDB through mongoose. This equals to (SELECT * FROM "todos") in SQL
+  const userId = req.user._id
+  Todo.find({ userId }) // Tell Todo data model to find data in MongoDB through mongoose. This equals to (SELECT * FROM "todos") in SQL
     .lean() // Transfer the mongoose object into clean Javascript array
     .sort({ _id: "asc" })
     .then((todos) => res.render("index", { todos })) // Then, pass the data to index partial template

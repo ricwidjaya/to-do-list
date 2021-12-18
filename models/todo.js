@@ -1,5 +1,5 @@
 // Import mongoose
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 // Import Schema from mongoose
 const Schema = mongoose.Schema
@@ -13,8 +13,14 @@ const todoSchema = new Schema({
   isDone: {
     type: Boolean,
     default: false
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    index: true,
+    required: true
   }
 })
 
 // Export todo Schema
-module.exports = mongoose.model('Todo', todoSchema)
+module.exports = mongoose.model("Todo", todoSchema)
