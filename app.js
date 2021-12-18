@@ -6,7 +6,8 @@ const methodOverride = require("method-override") // Override HTTP verbs to matc
 const routes = require("./routes")
 require("./config/mongoose")
 const usePassport = require("./config/passport")
-const MongoStore = require("connect-mongo")
+const authInfo = require('./middleware/auth-info')
+// const MongoStore = require("connect-mongo")
 
 // Initialize server
 const app = express()
@@ -22,7 +23,7 @@ app.use(express.static("public"))
 // Set cookie session
 app.use(
   session({
-    store: MongoStore.create({ mongoUrl: "mongodb://localhost/todo-list" }),
+    // store: MongoStore.create({ mongoUrl: "mongodb://localhost/todo-list" }),
     secret: "yourCookieYourSecret",
     resave: false,
     saveUninitialized: true
@@ -37,7 +38,7 @@ app.use(methodOverride("_method"))
 
 // Passport.js
 usePassport(app)
-
+app.use(authInfo)
 // Main Router
 app.use(routes)
 
