@@ -6,6 +6,8 @@ const passport = require("passport")
 
 // Login Page
 router.get("/login", (req, res) => {
+  const user = req.user
+  if (user) return res.redirect("/")
   res.render("login")
 })
 
