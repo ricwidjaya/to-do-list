@@ -23,7 +23,8 @@ router.post(
 // Log out route
 router.get("/logout", (req, res) => {
   req.logout()
-  res.redirect("/login")
+  req.flash("success_msg", "You have logged out.")
+  res.redirect("./login")
 })
 
 // Register Page
@@ -32,24 +33,42 @@ router.get("/register", (req, res) => {
 })
 
 router.post("/register", (req, res) => {
+  const errors = []
   const { name, email, password, confirmPassword } = req.body
+  if (!name || !email || !password || !confirmPassword) {
+    errors.push({ message: "Please fill out all fileds." })
+  }
+
+  if (password !== confirmPassword) {
+    errors.push({ message: "Password Inconsistent." })
+  }
+
+  if (errors.length) {
+    return res.render("register", {
+      errors,
+      name,
+      email,
+      password,
+      confirmPassword
+    })
+  }
+
   User.findOne({ email }).then((user) => {
     if (user) {
-      console.log("User already exist")
-      res.render("register", {
+      errors.push({ message: "User already exist" })
+      return res.render("register", {
+        errors,
         name,
         email,
         password,
         confirmPassword
       })
-    } else {
-      User.create({
-        name,
-        email,
-        password
-      })
-      res.redirect("./login")
     }
+    return User.create({
+      name,
+      email,
+      password
+    }).then(() => res.redirect("./login"))
   })
 })
 

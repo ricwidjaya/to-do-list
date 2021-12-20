@@ -6,8 +6,9 @@ const methodOverride = require("method-override") // Override HTTP verbs to matc
 const routes = require("./routes")
 require("./config/mongoose")
 const usePassport = require("./config/passport")
-const authInfo = require('./middleware/auth-info')
+const authInfo = require("./middleware/auth-info")
 // const MongoStore = require("connect-mongo")
+const flash = require("connect-flash")
 
 // Initialize server
 const app = express()
@@ -38,6 +39,7 @@ app.use(methodOverride("_method"))
 
 // Passport.js
 usePassport(app)
+app.use(flash())
 app.use(authInfo)
 // Main Router
 app.use(routes)
