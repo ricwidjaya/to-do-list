@@ -13,19 +13,22 @@ module.exports = (app) => {
 
   // Local Strategy (User Authentication)
   passport.use(
-    new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-      User.findOne({ email })
-        .then((user) => {
-          if (!user) {
-            return done(null, false, { message: "User not found!" })
-          }
-          if (user.password !== password) {
-            return done(null, false, { message: "Incorrect password" })
-          }
-          return done(null, user)
-        })
-        .catch((err) => done(err, false))
-    })
+    new LocalStrategy(
+      { usernameField: "email", passReqToCallback: true },
+      (req, email, password, done) => {
+        User.findOne({ email })
+          .then((user) => {
+            if (!user) {
+              return done(null, false, { message: "User not found!" })
+            }
+            if (user.password !== password) {
+              return done(null, false, { message: "Incorrect password" })
+            }
+            return done(null, user)
+          })
+          .catch((err) => done(err, false))
+      }
+    )
   )
 
   // Serialize and Deserialize

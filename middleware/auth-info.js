@@ -3,6 +3,7 @@ const getAuthInfo = (req, res, next) => {
   res.locals.user = req.user
   res.locals.success_msg = req.flash("success_msg")
   res.locals.warning_msg = req.flash("warning_msg")
+  res.locals.error = req.flash("error")
   return next()
 }
 
