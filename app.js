@@ -6,6 +6,7 @@ const methodOverride = require("method-override") // Override HTTP verbs to matc
 const routes = require("./routes")
 require("./config/mongoose")
 const usePassport = require("./config/passport")
+const bcrypt = require("bcryptjs")
 const authInfo = require("./middleware/auth-info")
 // const MongoStore = require("connect-mongo")
 const flash = require("connect-flash")
